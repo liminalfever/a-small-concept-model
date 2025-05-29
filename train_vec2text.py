@@ -7,6 +7,8 @@ from modules.train import train
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+resume_from: str = "saved_models/prenet_prefix_tuning.pth"
+
 encoder = get_encoder("all-MiniLM-L6-v2")
 decoder, tokenizer = get_gpt2_decoder()
 
@@ -18,6 +20,9 @@ prenet = PreNet(
     bottleneck_dim=128,
     prefix_len=20
 ).to(device)
+
+if resume_from:
+    prenet.load_state_dict(torch.load(resume_from, map_location=device))
 
 optimizer = torch.optim.Adam(prenet.parameters(), lr=1e-4)
 loss_fct = nn.CrossEntropyLoss(ignore_index=tokenizer.pad_token_id)
