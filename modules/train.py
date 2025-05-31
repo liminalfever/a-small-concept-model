@@ -31,3 +31,68 @@ def train(prenet, decoder, train_dataloader, optimizer, loss_fct, num_epochs):
 
         avg_loss = total_loss / len(train_dataloader)
         print(f"Epoch {epoch+1}/{num_epochs} - Avg Loss: {avg_loss:.4f}")
+
+
+def train_with_validation(prenet, decoder,
+          train_dataloader, validation_loader,
+          optimizer, loss_fct, num_epochs):
+
+    prenet.to(device)
+    decoder.to(device)
+
+    for epoch in range(num_epochs):
+        # ——— Training ———
+        prenet.train()
+        decoder.train()
+        total_train_loss = 0.0
+
+        for embeddings, input_ids in tqdm(train_dataloader, desc=f"Epoch {epoch+1} [Train]"):
+            embeddings = embeddings.to(device)
+            input_ids  = input_ids.to(device)
+
+            # forward
+            prefix_embeds = prenet(embeddings)
+            token_embeds  = decoder.transformer.wte(input_ids)
+            inputs_embeds = torch.cat([prefix_embeds, token_embeds[:, :-1, :]], dim=1)
+
+            outputs = decoder(inputs_embeds=inputs_embeds)
+            logits  = outputs.logits[:, prenet.prefix_len:, :]  # shape [B, L, V]
+            labels  = input_ids[:, 1:]                          # shifted targets
+
+            B, L, V = logits.size()
+            loss = loss_fct(logits.reshape(-1, V), labels.reshape(-1))
+
+            # backward
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+
+            total_train_loss += loss.item()
+
+        avg_train_loss = total_train_loss / len(train_dataloader)
+
+        # ——— Validation ———
+        prenet.eval()
+        decoder.eval()
+        total_val_loss = 0.0
+
+        with torch.no_grad():
+            for embeddings, input_ids in tqdm(validation_loader, desc=f"Epoch {epoch+1} [Valid]"):
+                embeddings = embeddings.to(device)
+                input_ids  = input_ids.to(device)
+
+                prefix_embeds = prenet(embeddings)
+                token_embeds  = decoder.transformer.wte(input_ids)
+                inputs_embeds = torch.cat([prefix_embeds, token_embeds[:, :-1, :]], dim=1)
+
+                outputs = decoder(inputs_embeds=inputs_embeds)
+                logits  = outputs.logits[:, prenet.prefix_len:, :]
+                labels  = input_ids[:, 1:]
+
+                B, L, V = logits.size()
+                loss = loss_fct(logits.reshape(-1, V), labels.reshape(-1))
+                total_val_loss += loss.item()
+
+        avg_val_loss = total_val_loss / len(validation_loader)
+
+        print(f"Epoch {epoch+1}/{num_epochs} — Train Loss: {avg_train_loss:.4f}   Val Loss: {avg_val_loss:.4f}")

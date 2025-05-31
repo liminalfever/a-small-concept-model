@@ -7,7 +7,7 @@ from modules.train import train
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-resume_from: str = "saved_models/prenet_prefix_tuning.pth"
+resume_from: str = None
 
 encoder = get_encoder("all-MiniLM-L6-v2")
 decoder, tokenizer = get_gpt2_decoder()
