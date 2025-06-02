@@ -1,3 +1,4 @@
+import torch
 from datasets import load_dataset
 from torch.utils.data import Dataset, DataLoader
 
@@ -22,6 +23,23 @@ class SentencePrefixDataset(Dataset):
                                   return_tensors='pt')
         input_ids = encoded.input_ids.squeeze(0)
         return embedding, input_ids
+
+
+class SentenceEmbeddingDataset(Dataset):
+    def __init__(self, data: torch.Tensor):
+        assert data.ndim == 3
+        self.seq_len = data.shape[1]
+        
+        self.data = data.float()
+    
+    def __len__(self):
+        return self.data.size(0)
+
+    def __getitem__(self, idx):
+        seq = self.data[idx]
+        input_seq  = seq[: self.seq_len - 1, :]  # (15, 384)
+        target_seq = seq[1: self.seq_len, :]     # (15, 384)
+        return input_seq, target_seq
 
 
 def get_dialog_dataloader(embedder, tokenizer, max_target_length, batch_size=32):
