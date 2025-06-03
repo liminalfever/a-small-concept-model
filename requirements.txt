@@ -1,3 +1,5 @@
 torch
 sentence_transformers
 datasets
+streamlit
+nltk

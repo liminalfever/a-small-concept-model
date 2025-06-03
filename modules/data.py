@@ -109,6 +109,7 @@ def get_bookcorpus_for_inversion(
 
 def get_bookcorpus_for_scm(
     encoder,
+    embed_dim,
     train_batch_size=32,
     embed_batch_size=32,
 ):
@@ -122,7 +123,7 @@ def get_bookcorpus_for_scm(
         show_progress_bar=True,
         convert_to_tensor=True,
     )
-    reshaped_embeddings = embeddings.contiguous().view(100000, 16, 384)
+    reshaped_embeddings = embeddings.contiguous().view(100000, 16, embed_dim)
 
     dataset = SCMTrainingDataset(reshaped_embeddings)
     dataloader = DataLoader(

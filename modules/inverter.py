@@ -46,7 +46,7 @@ class Inverter:
         self.decoder = decoder
         self.tokenizer = tokenizer
 
-    def invert(self, x: torch.Tensor, max_len: Optional[int] = 50, temperature: Optional[int] = 0.9):
+    def invert(self, x: torch.Tensor, max_len: Optional[int] = 50, temperature: Optional[int] = 0.1):
         self.decoder.eval()
         self.prenet.eval()
         eos_id = self.tokenizer.eos_token_id
