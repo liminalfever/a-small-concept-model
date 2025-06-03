@@ -18,5 +18,5 @@ scm_configs = {
         "dropout": 0.1,
         "max_seq_len": 16,
     },
-    "load_checkpoint": "saved_models/scm_v01.pth"
+    "load_checkpoint": "saved_models/scm_v01_multilingual.pth"
 }

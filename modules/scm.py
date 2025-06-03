@@ -115,7 +115,7 @@ class GenerativeSCM:
 def build_scm():
     """Automatically builds SCM loading checkpoints."""
     scm = SmallConceptModel(**params.scm_configs["model_params"]).to(device)
-    encoder = get_encoder("all-MiniLM-L6-v2")
+    encoder = get_encoder("paraphrase-multilingual-MiniLM-L12-v2")
     inverter = build_inverter()
 
     if params.scm_configs["load_checkpoint"]:
