@@ -5,7 +5,7 @@ prenet_configs = {
         "rank": 128,
         "prefix_len": 20,
     },
-    "load_checkpoint": "saved_models/prenet_prefix_tuning_bookcorpus.pth"
+    "load_checkpoint": "saved_models/prenet_prefix_tuning_bookcorpus_multilingual.pth"
 }
 
 scm_configs = {
