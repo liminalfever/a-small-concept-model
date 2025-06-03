@@ -6,8 +6,9 @@ from torch.utils.data import Dataset, DataLoader
 class InversionTrainingDataset(Dataset):
     """Dataset class to train embedding inversion models."""
 
-    def __init__(self, embeddings, input_ids_list):
+    def __init__(self, embeddings, input_ids_list, eos_id):
         self.embeddings = embeddings
+        self.eos_id = eos_id
         self.input_ids_list = input_ids_list
 
     def __len__(self):
@@ -16,7 +17,9 @@ class InversionTrainingDataset(Dataset):
     def __getitem__(self, idx):
         embedding = self.embeddings[idx]
         input_ids = self.input_ids_list[idx]
-        return embedding, input_ids
+        eos_tensor = torch.tensor([self.eos_id], dtype=torch.long, device=input_ids.device)
+        input_ids_with_eos = torch.cat([input_ids, eos_tensor], dim=0)
+        return embedding, input_ids_with_eos
 
 
 class SCMTrainingDataset(Dataset):
@@ -92,9 +95,11 @@ def get_bookcorpus_for_inversion(
         convert_to_tensor=True,
     )
 
-    train_dataset = InversionTrainingDataset(train_embeddings, train_input_ids)
+    train_dataset = InversionTrainingDataset(
+        train_embeddings, train_input_ids, tokenizer.eos_token_id
+    )
     validation_dataset = InversionTrainingDataset(
-        validation_embeddings, validation_input_ids
+        validation_embeddings, validation_input_ids, tokenizer.eos_token_id
     )
 
     return DataLoader(
@@ -120,6 +125,8 @@ def get_bookcorpus_for_scm(
     reshaped_embeddings = embeddings.contiguous().view(100000, 16, 384)
 
     dataset = SCMTrainingDataset(reshaped_embeddings)
-    dataloader = DataLoader(dataset, batch_size=train_batch_size, shuffle=True, drop_last=True)
+    dataloader = DataLoader(
+        dataset, batch_size=train_batch_size, shuffle=True, drop_last=True
+    )
 
     return dataloader
