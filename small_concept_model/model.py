@@ -1,6 +1,7 @@
 import math
 import torch
 import torch.nn as nn
+from torch.utils.data import DataLoader
 from typing import Optional
 
 
@@ -58,7 +59,7 @@ class OutputProj(nn.Module):
         scaler_mean: Optional[float] = 0.0,
         scaler_std: Optional[float] = 1.0,
     ):
-        super(OutputProj, self).__init__()
+        super().__init__()
         self.register_buffer("mean", torch.tensor(scaler_mean))
         self.register_buffer("std", torch.tensor(scaler_std))
         self.linear = nn.Linear(d_model, d_embed)
@@ -82,7 +83,7 @@ class Transformer(nn.Module):
         n_layers: Optional[int] = 3,
         dropout: Optional[float] = 0.1,
     ):
-        super(Transformer, self).__init__()
+        super().__init__()
         encoder_layer = nn.TransformerEncoderLayer(
             d_model=d_model,
             nhead=n_heads,
@@ -116,7 +117,7 @@ class SmallConceptModel(nn.Module):
         scaler_mean: Optional[float] = 0.0,
         scaler_std: Optional[float] = 1.0,
     ):
-        super(SmallConceptModel, self).__init__()
+        super().__init__()
         self.d_model = d_model
         self.input_projection = InputProj(d_embed, d_model, scaler_mean, scaler_std)
         self.pos_encoder = PositionalEncoding(d_model, max_seq_len)
