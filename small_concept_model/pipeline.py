@@ -26,7 +26,7 @@ class Pipeline:
         initial_sequence: torch.Tensor,
         n_future_steps: Optional[int] = 5,
         sigma_noise: Optional[float] = 0.0,
-    ):
+    ) -> torch.Tensor:
         """Generate a sequence of emeddings from past ones."""
 
         model.eval()

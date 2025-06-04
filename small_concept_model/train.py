@@ -8,6 +8,7 @@ from transformers import GPT2LMHeadModel, GPT2Tokenizer
 from small_concept_model.model import SmallConceptModel
 from tqdm import tqdm
 
+
 def train_inverter(
     prenet: PreNet,
     decoder: GPT2LMHeadModel,
@@ -27,7 +28,7 @@ def train_inverter(
     prenet.to(device)
     prenet.train()
 
-    optimizer = torch.optim.Adam(prenet.parameters(), lr=lr)
+    optimizer = torch.optim.Adam(prenet.parameters(), lr=lr, weight_decay=weight_decay)
     loss_fct = nn.CrossEntropyLoss(ignore_index=tokenizer.pad_token_id)
 
     for epoch in range(num_epochs):
@@ -35,17 +36,19 @@ def train_inverter(
         decoder.eval()
         total_train_loss = 0.0
 
-        for embeddings, input_ids in tqdm(train_loader, desc=f"Epoch {epoch+1} [Train]"):
+        for embeddings, input_ids in tqdm(
+            train_loader, desc=f"Epoch {epoch+1} [Train]"
+        ):
             embeddings = embeddings.to(device)
-            input_ids  = input_ids.to(device)
+            input_ids = input_ids.to(device)
 
             prefix_embeds = prenet(embeddings)
-            token_embeds  = decoder.transformer.wte(input_ids)
+            token_embeds = decoder.transformer.wte(input_ids)
             inputs_embeds = torch.cat([prefix_embeds, token_embeds[:, :-1, :]], dim=1)
 
             outputs = decoder(inputs_embeds=inputs_embeds)
-            logits  = outputs.logits[:, prenet.prefix_len:, :]  # shape [B, L, V]
-            labels  = input_ids[:, 1:]                          # shifted targets
+            logits = outputs.logits[:, prenet.prefix_len :, :]  # shape [B, L, V]
+            labels = input_ids[:, 1:]  # shifted targets
 
             B, L, V = logits.size()
             loss = loss_fct(logits.reshape(-1, V), labels.reshape(-1))

@@ -2,7 +2,10 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from typing import Optional
+from sentence_transformers import SentenceTransformer
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 class PreNet(nn.Module):
@@ -77,3 +80,29 @@ class Inverter:
 
         gen_ids = torch.cat(generated_ids, dim=1)
         return self.tokenizer.decode(gen_ids[0].cpu().numpy(), skip_special_tokens=True)
+
+
+def get_encoder(model_id: str, trainable: Optional[bool] = False):
+    """Gets SentenceTransformer sentence-level embedding model."""
+    model = SentenceTransformer(model_id)
+    model.to(device)
+    if not trainable:
+        model.eval()
+        for p in model.parameters():
+            p.requires_grad = False
+    return model
+
+
+def get_gpt2_decoder(trainable: Optional[bool] = False):
+    """Gets GPT-2 (124M) decoder-only transformer model and tokenizer."""
+    tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
+    if tokenizer.pad_token is None:
+        tokenizer.add_special_tokens({"pad_token": "[PAD]"})
+    model = GPT2LMHeadModel.from_pretrained("gpt2")
+    model.resize_token_embeddings(len(tokenizer))
+    model.to(device)
+    if not trainable:
+        model.eval()
+    for param in model.parameters():
+        param.requires_grad = False
+    return model, tokenizer
