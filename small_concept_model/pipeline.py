@@ -95,3 +95,27 @@ class Pipeline:
 
         for v in generated_seq.squeeze(0):
             yield self.inverter.invert(v, max_len, temperature, repetition_penalty) + " "
+    
+    def hybrid_generation(
+        self,
+        input_texts: List[str],
+        n_future_steps: Optional[int] = 5,
+        sigma_noise: Optional[float] = 0.0,
+        temperature: Optional[float] = 0.1,
+        repetition_penalty: Optional[float] = 1.1,
+        max_len: Optional[int] = 30,
+    ):
+        """Generates a streaming sequence of texts from past ones, re-inserting embeddings from inverted texts."""
+
+        if type(input_texts) != list:
+            input_texts = [input_texts]
+        
+        encoded_inputs = self.encoder.encode(input_texts, convert_to_tensor=True).to(device)
+        
+        for _ in range(n_future_steps):
+            out = self.model(encoded_inputs.unsqueeze(0))[:, -1, :]
+            text_out = self.inverter.invert(out.squeeze(0), max_len, temperature, repetition_penalty)
+            encoded_text_out = self.encoder.encode([text_out], convert_to_tensor=True).to(device)
+            encoded_inputs = torch.cat([encoded_inputs, encoded_text_out], dim=0)
+            
+            yield text_out + " "
