@@ -1,0 +1,28 @@
+{
+  "model": {
+    "small_multilingual": {
+      "configs": {
+        "d_model": 512,
+        "d_embed": 384,
+        "d_ff": 2048,
+        "n_heads": 4,
+        "n_layers": 3,
+        "dropout": 0.1,
+        "max_seq_len": 128
+      },
+      "pre_trained_weights": "saved_models/scm_v01_multilingual.pth"
+    }
+  },
+  "inverter": {
+    "paraphrase_multilingual": {
+      "configs": {
+        "input_dim": 384,
+        "output_dim": 768,
+        "rank": 128,
+        "prefix_len": 20
+      },
+      "encoder_id": "paraphrase_multilingual_L12_v2",
+      "pre_trained_weights": "saved_models/prenet_prefix_tuning_bookcorpus_multilingual.pth"
+    }
+  }
+}

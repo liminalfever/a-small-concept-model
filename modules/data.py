@@ -113,9 +113,9 @@ def get_bookcorpus_for_scm(
     train_batch_size=32,
     embed_batch_size=32,
 ):
-    """Get bookcorpus dataset (100k x 16) of sorted sentences to train autoregressive models."""
+    """Get bookcorpus dataset (1,000,000 x 16) of sorted sentences to train autoregressive models."""
 
-    data = load_dataset("francescoortame/bookcorpus-sorted-100k16x", split="train")
+    data = load_dataset("francescoortame/bookcorpus-sorted-1M16x", split="train")
     flat_texts = [t for sublist in data["slice"] for t in sublist]
     embeddings = encoder.encode(
         flat_texts,
@@ -123,7 +123,7 @@ def get_bookcorpus_for_scm(
         show_progress_bar=True,
         convert_to_tensor=True,
     )
-    reshaped_embeddings = embeddings.contiguous().view(100000, 16, embed_dim)
+    reshaped_embeddings = embeddings.contiguous().view(1000000, 16, embed_dim)
 
     dataset = SCMTrainingDataset(reshaped_embeddings)
     dataloader = DataLoader(
