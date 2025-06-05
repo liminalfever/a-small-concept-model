@@ -65,11 +65,13 @@ def get_bookcorpus_inverter(
         texts = texts[: int(sample * len(texts))]
 
     if clean:
+        print("Cleaning texts...")
         texts = [clean_text(t) for t in texts]
 
+    print("Tokenizing the texts...")
     input_ids = [
         tokenizer(
-            s,
+            s + tokenizer.eos_token,
             truncation=True,
             max_length=max_target_len,
             padding="max_length",

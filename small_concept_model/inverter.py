@@ -50,6 +50,7 @@ class Inverter:
         x: torch.Tensor,
         max_len: Optional[int] = 30,
         temperature: Optional[float] = 0.1,
+        repetition_penalty: Optional[float] = None
     ):
         """Invert an embedding vector into text."""
 
@@ -66,7 +67,18 @@ class Inverter:
 
             for _ in range(max_len):
                 outs = self.decoder(inputs_embeds=generated)
-                next_logits = outs.logits[:, -1, :]
+                next_logits = outs.logits[:, -1, :].clone()
+
+                if repetition_penalty is not None and repetition_penalty != 1.0:
+                    repetition_penalty = max(1.0, repetition_penalty)
+                    scores = next_logits.squeeze(0)
+                    for prev_id in set(generated_ids):
+                        if scores[prev_id] < 0:
+                            scores[prev_id] = scores[prev_id] * repetition_penalty
+                        else:
+                            scores[prev_id] = scores[prev_id] / repetition_penalty
+                    next_logits = scores.unsqueeze(0)
+
                 probs = F.softmax(next_logits / temperature, dim=-1)
                 next_id = torch.multinomial(probs, num_samples=1)
                 token_id = next_id.item()
