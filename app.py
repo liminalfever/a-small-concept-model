@@ -1,14 +1,16 @@
 import streamlit as st
 import torch
 import nltk
-from modules.scm import build_scm
+from small_concept_model.auto import build_pipeline
 from nltk.tokenize import sent_tokenize
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-if "scm" not in st.session_state:
+if "pipe" not in st.session_state:
     with st.spinner("Building SCM Model..."):
-        st.session_state.scm = build_scm()
+        st.session_state.pipe = build_pipeline(
+            "scm_test_multilingual", "paraphrase_multilingual"
+        )
         nltk.download("punkt_tab")
 
 st.image("resources/repo-logo.png")
@@ -18,7 +20,12 @@ if user_input:
     input_sentences = sent_tokenize(user_input)
 
     st.write_stream(
-        st.session_state.scm.generate_stream(
-            input_sentences, 5, 0.01, 30
+        st.session_state.pipe.generate_stream(
+            input_sentences,
+            n_future_steps=5,
+            sigma_noise=0.0,
+            temperature=0.4,
+            repetition_penalty=1.3,
+            max_len=30
         )
     )

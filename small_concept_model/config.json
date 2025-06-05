@@ -1,16 +1,16 @@
 {
   "model": {
-    "small_multilingual": {
+    "scm_test_multilingual": {
       "configs": {
-        "d_model": 512,
+        "d_model": 256,
         "d_embed": 384,
-        "d_ff": 2048,
+        "d_ff": 1024,
         "n_heads": 4,
         "n_layers": 3,
         "dropout": 0.1,
-        "max_seq_len": 128
+        "max_seq_len": 16
       },
-      "pre_trained_weights": "saved_models/scm_v01_multilingual.pth"
+      "pre_trained_weights": "saved_models/scm/scm_test.pth"
     }
   },
   "inverter": {
@@ -21,8 +21,8 @@
         "rank": 128,
         "prefix_len": 20
       },
-      "encoder_id": "paraphrase_multilingual_L12_v2",
-      "pre_trained_weights": "saved_models/prenet_prefix_tuning_bookcorpus_multilingual.pth"
+      "encoder_id": "paraphrase-multilingual-MiniLM-L12-v2",
+      "pre_trained_weights": "saved_models/prenet/prenet_100k_good.pth"
     }
   }
 }

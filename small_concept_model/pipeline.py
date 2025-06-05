@@ -50,6 +50,7 @@ class Pipeline:
         n_future_steps: Optional[int] = 5,
         sigma_noise: Optional[float] = 0.0,
         temperature: Optional[float] = 0.1,
+        repetition_penalty: Optional[float] = 1.1,
         max_len: Optional[int] = 30,
     ) -> List[str]:
         """Generates a sequence of texts from past ones."""
@@ -66,7 +67,7 @@ class Pipeline:
 
         new_sentences = []
         for v in generated_seq.squeeze(0):
-            new_sentence = self.inverter.invert(v, max_len, temperature)
+            new_sentence = self.inverter.invert(v, max_len, temperature, repetition_penalty)
             new_sentences.append(new_sentence)
 
         return new_sentences
@@ -77,6 +78,7 @@ class Pipeline:
         n_future_steps: Optional[int] = 5,
         sigma_noise: Optional[float] = 0.0,
         temperature: Optional[float] = 0.1,
+        repetition_penalty: Optional[float] = 1.1,
         max_len: Optional[int] = 30,
     ):
         """Generates a streaming sequence of texts from past ones."""
@@ -92,4 +94,4 @@ class Pipeline:
         )
 
         for v in generated_seq.squeeze(0):
-            yield self.inverter.invert(v, max_len, temperature)
+            yield self.inverter.invert(v, max_len, temperature, repetition_penalty) + " "
