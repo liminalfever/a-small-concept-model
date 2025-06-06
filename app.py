@@ -20,7 +20,7 @@ if user_input:
     input_sentences = sent_tokenize(user_input)
 
     st.write_stream(
-        st.session_state.pipe.hybrid_generation(
+        st.session_state.pipe.generate_stream(
             input_sentences,
             n_future_steps=5,
             sigma_noise=0.0,

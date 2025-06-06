@@ -96,3 +96,4 @@ class SmallConceptModel(nn.Module):
         mask = self._get_causal_mask(self.max_seq_len).to(device)
         x = self.decoder(x, mask)  # (B, D, T)
         return self.out_proj(x)  # (B, D, T)
+
