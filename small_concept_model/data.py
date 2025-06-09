@@ -87,7 +87,7 @@ def get_bookcorpus_inverter(
         convert_to_tensor=True,
     )
 
-    return InverterDataset(embeddings, input_ids, tokenizer.eos_token_id)
+    return embeddings, input_ids
 
 
 def get_bookcorpus_scm(
