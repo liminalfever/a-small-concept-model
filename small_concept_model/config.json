@@ -1,20 +1,20 @@
 {
   "model": {
-    "scm_test_multilingual": {
+    "scm_multilingual": {
       "configs": {
-        "d_model": 256,
+        "d_model": 512,
         "d_embed": 384,
-        "d_ff": 1024,
-        "n_heads": 4,
-        "n_layers": 3,
+        "d_ff": 2048,
+        "n_heads": 8,
+        "n_layers": 4,
         "dropout": 0.1,
         "max_seq_len": 16
       },
-      "pre_trained_weights": "saved_models/scm/scm_test.pth"
+      "pre_trained_weights": "saved_models/scm_checkpoint.pth"
     }
   },
   "inverter": {
-    "paraphrase_multilingual": {
+    "inverter_multilingual": {
       "configs": {
         "input_dim": 384,
         "output_dim": 768,
@@ -22,7 +22,7 @@
         "prefix_len": 20
       },
       "encoder_id": "paraphrase-multilingual-MiniLM-L12-v2",
-      "pre_trained_weights": "saved_models/prenet/prenet_100k_good.pth"
+      "pre_trained_weights": "saved_models/prenet_checkpoint.pth"
     }
   }
 }

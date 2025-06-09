@@ -15,10 +15,7 @@ def build_scm(model_id: str) -> SmallConceptModel:
 
     assert model_id in config["model"].keys()
 
-    dummy_means = torch.zeros(config["model"][model_id]["configs"]["d_embed"])
-    dummy_stds  = torch.ones(config["model"][model_id]["configs"]["d_embed"])
-
-    model = SmallConceptModel(means=dummy_means, stds=dummy_stds, **config["model"][model_id]["configs"])
+    model = SmallConceptModel(**config["model"][model_id]["configs"])
     model = model.to(device)
     model.load_state_dict(
         torch.load(
