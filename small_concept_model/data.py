@@ -87,7 +87,7 @@ def get_bookcorpus_inverter(
         convert_to_tensor=True,
     )
 
-    return InverterDataset(embeddings, input_ids, tokenizer.eos_token_id)
+    return embeddings, input_ids
 
 
 def get_bookcorpus_scm(
@@ -97,7 +97,7 @@ def get_bookcorpus_scm(
 ):
     """Gets Bookcorpus dataset (100k x 16) for autoregressive training."""
 
-    data = load_dataset("francescoortame/bookcorpus-sorted-100k16x", split="train")
+    data = load_dataset("francescoortame/bookcorpus-sorted-1M16x", split="train")
     flat_texts = [t for sublist in data["slice"] for t in sublist]
 
     if clean:
@@ -113,6 +113,4 @@ def get_bookcorpus_scm(
         show_progress_bar=True,
         convert_to_tensor=True,
     )
-    reshaped_embeddings = embeddings.contiguous().view(n_seqs, seq_len, d_embed)
-
-    return SCMDataset(reshaped_embeddings)
+    return embeddings.contiguous().view(n_seqs, seq_len, d_embed)
