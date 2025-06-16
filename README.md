@@ -7,20 +7,20 @@ Working prototype for a Small Concept Model (SCM) based on Meta's Large Concept 
 ---
 
 On the root of this project, you can find:
-* `train_inversion.ipynb`, a notebook that trains an embedding inversion model based on prefix tuning. By default, it trains a _PreNet_ to invert _paraphrase-multilingual-MiniLM-L12-v2_ sentence-level embeddings.
+* `train_inversion.ipynb`, a notebook that trains an embedding inversion model based on prefix tuning (Figure 1). By default, it trains a _PreNet_ to invert _paraphrase-multilingual-MiniLM-L12-v2_ sentence-level embeddings.
 
 <figure align="center">
     <img src="resources/prenet.png" alt="Example Image">
-    <figcaption>Scheme of the architecture of the embedding inversion model.</figcaption>
 </figure>
+<p align="center">Figure 1. Scheme of the architecture of the embedding inversion model.</p>
 
-* `train_scm.ipynb`, a notebook that trains the actual autoregressive small concept model (SMC), a decoder-only transformer inspired by Meta's _BaseLCM_ designed for next-embedding prediction.
+* `train_scm.ipynb`, a notebook that trains the actual autoregressive small concept model (SMC), a decoder-only transformer inspired by Meta's _BaseLCM_ designed for next-embedding prediction (Figure 2).
 > For a more faithful straightforward reproduction of _BaseLCM_, take a look at [this implementation](https://www.youtube.com/watch?v=2ZLd0uZvwbU).
 
 <figure align="center">
     <img src="resources/scm.png" alt="Example Image">
-    <figcaption>High-level scheme of the Small Concept Model (SCM).</figcaption>
 </figure>
+<p align="center">Figure 2. High-level scheme of the Small Concept Model (SCM).</p>
 
 * `inference_test.ipynb`, a notebook where you can run inference using pretrained weights. You can test both the embedding inversion model (trained on 1 million sentences from _BookCorpus_), and the SCM (trained on 100k sequences of 16 sentences each from _BookCorpus_).
 
