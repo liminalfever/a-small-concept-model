@@ -22,7 +22,7 @@
         "prefix_len": 20
       },
       "encoder_id": "paraphrase-multilingual-MiniLM-L12-v2",
-      "pre_trained_weights": "saved_models/prenet_checkpoint.pth"
+      "pre_trained_weights": "saved_models/prenet_checkpoint_1M.pth"
     }
   }
 }
