@@ -15,7 +15,7 @@ On the root of this project, you can find:
 </figure>
 
 * `train_scm.ipynb`, a notebook that trains the actual autoregressive small concept model (SMC), a decoder-only transformer inspired by Meta's _BaseLCM_ designed for next-embedding prediction.
-> For a more faithful straightforward repreoduction of _BaseLCM_, take a look at [this implementation](https://www.youtube.com/watch?v=2ZLd0uZvwbU).
+> For a more faithful straightforward reproduction of _BaseLCM_, take a look at [this implementation](https://www.youtube.com/watch?v=2ZLd0uZvwbU).
 
 <figure align="center">
     <img src="resources/scm.png" alt="Example Image">

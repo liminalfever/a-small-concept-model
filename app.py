@@ -16,10 +16,10 @@ if "pipe" not in st.session_state:
 st.image("resources/repo-logo.png")
 
 with st.sidebar:
-    st.slider("Temperature", 0.0, 1.0, 0.1, step=0.1, key="temperature")
-    st.slider("Max Future Steps", 1, 10, 5, step=1, key="max_future_steps")
-    st.number_input("Max Length Sentences", 1, 50, 30, step=1, key="len_sentences")
-    st.slider("Similarity Threshold", 0.0, 1.0, 0.9, step=0.05, key="similarity_threshold")
+    st.slider("Temperature", 0.0, 1.0, 0.1, step=0.1, key="temperature", help="Randomness of the GPT-2 decoder.")
+    st.slider("Max Future Steps", 1, 10, 5, step=1, key="max_future_steps", help="Maximum number of future steps to predict.")
+    st.number_input("Max Length Sentences", 1, 50, 30, step=1, key="len_sentences", help="Maximum length of each generated sentence.")
+    st.slider("Similarity Threshold", 0.0, 1.0, 0.9, step=0.05, key="similarity_threshold", help="Threshold for similarity between generated sentences.")
 
 user_input = st.chat_input()
 if user_input:

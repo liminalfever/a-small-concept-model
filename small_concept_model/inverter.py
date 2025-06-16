@@ -50,7 +50,7 @@ class Inverter:
         x: torch.Tensor,
         max_len: Optional[int] = 30,
         temperature: Optional[float] = 0.1,
-        repetition_penalty: Optional[float] = None
+        repetition_penalty: Optional[float] = None,
     ):
         """Invert an embedding vector into text."""
 
