@@ -25,3 +25,13 @@ On the root of this project, you can find:
 * `inference_test.ipynb`, a notebook where you can run inference using pretrained weights. You can test both the embedding inversion model (trained on 1 million sentences from _BookCorpus_), and the SCM (trained on 100k sequences of 16 sentences each from _BookCorpus_).
 
 Inside the `./small_concept_model` folder, you can find all the modules used to build models, load and pre-process datasets, and create the full pipleine.
+
+---
+
+## Streamlit App
+In this repo you can also find a Streamlit app to interact with the pretrained language models for text generation. To use it, from the root of the project run:
+```shell
+streamlit run app.py
+```
+
+<img width="1440" alt="app_test" src="https://github.com/user-attachments/assets/736a1ba4-b9b2-472b-8382-19c4402a3430" />
